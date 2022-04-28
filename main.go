@@ -5,10 +5,19 @@ import (
 	"log"
 
 	"github.com/gofiber/fiber/v2"
+	"github.com/neo4j/neo4j-go-driver/v4/neo4j"
 	"github.com/scout9ll/fire_meta/api"
+	"github.com/scout9ll/fire_meta/db"
 )
 
+func neo4jInit() (neo4j.Driver, error) {
+	config, _ := db.ReadConfig("config.json")
+	neoDriver, err := db.NeoDriver(config)
+	return neoDriver, err
+}
+
 func main() {
+	neo4jInit()
 	app := fiber.New()
 	// GET /api/register
 
@@ -42,5 +51,5 @@ func main() {
 		return c.SendString(msg) // => Hello john 👋!
 	})
 
-	log.Fatal(app.Listen(":3000"))
+	log.Fatal(app.Listen(":8108"))
 }
